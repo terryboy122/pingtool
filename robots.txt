@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://pingtool.pages.dev/sitemap.xml

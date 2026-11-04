@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>坪數計算工具｜除濕機、清淨機、冷氣、電費、延長線</title>
+<meta name="description" content="輸入坪數，算出除濕機需要的除濕力（公升／日）、空氣清淨機需要的 CADR 值、冷氣需要的冷房能力（kW），以及電器的每月電費、延長線能不能同時插這些電器，買之前先算好，不買錯尺寸。">
+<link rel="canonical" href="https://pingtool.pages.dev/">
+<meta property="og:title" content="坪數計算工具｜除濕機、清淨機、冷氣、電費、延長線">
+<meta property="og:description" content="輸入坪數，算出除濕機需要的除濕力（公升／日）、空氣清淨機需要的 CADR 值、冷氣需要的冷房能力（kW），以及電器的每月電費、延長線能不能同時插這些電器，買之前先算好，不買錯尺寸。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://pingtool.pages.dev/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="坪數計算工具｜除濕機、清淨機、冷氣、電費、延長線">
+<meta name="twitter:description" content="輸入坪數，算出除濕機需要的除濕力（公升／日）、空氣清淨機需要的 CADR 值、冷氣需要的冷房能力（kW），以及電器的每月電費、延長線能不能同時插這些電器，買之前先算好，不買錯尺寸。">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"除濕機標示的公升數是在什麼條件測的？","acceptedAnswer":{"@type":"Answer","text":"台灣標示的除濕力是在室溫 27°C、相對濕度 60% 的條件下測的。冬天低溫低濕時，實際除水量會比標示少，選型保留一點餘裕比較安心。"}},
+{"@type":"Question","name":"除濕機是不是買大不買小？","acceptedAnswer":{"@type":"Answer","text":"是。大台的不用一直全速運轉，反而比小台狂轉省電；小台除濕力不足，開整天也除不乾。"}},
+{"@type":"Question","name":"CADR 是什麼？","acceptedAnswer":{"@type":"Answer","text":"CADR 是潔淨空氣輸出率，單位 m³/h，代表一小時能輸出多少潔淨空氣。數字越大，清淨速度越快。挑機種先看顆粒物 CADR，再看適用坪數。"}},
+{"@type":"Question","name":"冷氣的「噸」怎麼換算？","acceptedAnswer":{"@type":"Answer","text":"台灣常說的噸是台制冷凍噸，約 2500 kcal/h（約 2.9 kW）。選購以 kW 為準最不容易錯，1 kW 約等於 860 kcal/h。"}},
+{"@type":"Question","name":"電費累進級距怎麼算？","acceptedAnswer":{"@type":"Answer","text":"台電住宅用電分六段累進計費，只有超過門檻的度數才套較高費率，不是整期都用最高那段算。夏月每度 1.78～8.86 元，非夏月 1.78～7.03 元，且帳單為雙月抄表，級距度數加倍計算。"}},
+{"@type":"Question","name":"為什麼廠商標示的適用坪數常偏大？","acceptedAnswer":{"@type":"Answer","text":"廠商標示多以最寬鬆條件估算，換氣次數少、挑高也不計。用換氣 3～5 次反推比較保險，挑高或開放空間要再加大。"}},
+{"@type":"Question","name":"一條延長線最多可以插多少瓦？","acceptedAnswer":{"@type":"Answer","text":"台灣常見延長線額定 15A，110V × 15A ＝ 1650W，同一條延長線上的電器瓦數加總不能超過這個數字。長時間使用建議保留餘裕、不要貼著上限用，也不要一條接一條串接延長線。"}}
+]}
+</script>
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"PingFang TC","Microsoft JhengHei",sans-serif;background:#FFF8E6;color:#3A3226;line-height:1.8;padding:20px 16px}
+  .wrap{max-width:640px;margin:0 auto}
+  h1{font-size:26px;line-height:1.4;margin:0 0 6px}
+  .sub{color:#6b5f4d;margin:0 0 24px}
+  .nav{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 20px}
+  .nav a{padding:7px 16px;border:2px solid #E0CFA0;background:#fff;border-radius:999px;text-decoration:none;color:#3A3226;font-weight:700;font-size:15px}
+  .card{background:#fff;border:2px solid #F0DFAE;border-radius:20px;padding:20px;margin:0 0 24px;box-shadow:0 4px 16px rgba(58,50,38,.06)}
+  .card h2{font-size:21px;margin:0 0 14px}
+  label{display:block;font-weight:700;margin:10px 0 4px}
+  input[type=number]{width:100%;font-size:19px;padding:10px 12px;border:2px solid #ddd;border-radius:12px}
+  .quick{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 0}
+  .quick button{font-size:15px;padding:6px 14px;border:2px solid #E0CFA0;background:#fff;border-radius:999px;cursor:pointer}
+  .check{display:flex;gap:8px;align-items:flex-start;margin:12px 0;font-size:16px}
+  .check input{width:20px;height:20px;margin-top:4px;flex:none}
+  button.calc{display:block;width:100%;font-size:19px;font-weight:700;padding:12px;border:0;border-radius:999px;background:#E8730C;color:#fff;cursor:pointer;margin-top:14px}
+  .result{display:none;margin-top:16px;background:#FFF3E0;border-radius:14px;padding:14px 16px}
+  .result.show{display:block}
+  .result .big{font-size:23px;font-weight:800;color:#C2570A}
+  .copybtn{margin-top:10px;font-size:15px;font-weight:700;padding:7px 18px;border:0;border-radius:999px;background:#2A9D8F;color:#fff;cursor:pointer}
+  .linkbtn{margin-top:10px;margin-right:8px;font-size:15px;font-weight:700;padding:7px 18px;border:2px solid #E8730C;background:#fff;color:#C2570A;border-radius:999px;cursor:pointer}
+  .next{margin-top:10px;font-size:15px}
+  .next a{color:#C2570A;font-weight:700}
+  .formula{font-size:14px;color:#6b5f4d;margin-top:10px}
+  .product{border:2px dashed #E0CFA0;border-radius:14px;padding:14px 16px;margin-top:16px}
+  .product h3{font-size:18px;margin:0 0 6px}
+  .product p{margin:0 0 10px;font-size:16px}
+  .product button{font-size:17px;font-weight:700;padding:9px 22px;border:0;border-radius:999px;background:#ccc;color:#fff;cursor:not-allowed}
+  table{width:100%;border-collapse:collapse;margin:8px 0 4px;font-size:16px}
+  th,td{border:1px solid #E0CFA0;padding:6px 10px;text-align:left}
+  th{background:#FFF3E0}
+  .sharebtn{display:inline-block;font-size:17px;font-weight:700;padding:9px 22px;border:0;border-radius:999px;background:#06C755;color:#fff;cursor:pointer;text-decoration:none}
+  .sharebtn.copy{background:#E8730C}
+  .disclosure{font-size:15px;color:#6b5f4d;text-align:center;margin:24px 0 8px}
+  details{background:#fff;border:2px solid #F0DFAE;border-radius:14px;padding:12px 16px;margin:0 0 12px}
+  details summary{font-weight:700;cursor:pointer}
+  .foot{font-size:14px;color:#6b5f4d;text-align:center;margin-top:24px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>坪數計算工具</h1>
+  <p class="sub">輸入坪數，算出除濕機、空氣清淨機、冷氣該買多大，以及電器的每月電費；再算延長線能不能同時插這些電器，買之前先算好，不買錯尺寸。</p>
+
+  <div class="nav"><a href="#conv">坪數換算</a><a href="#dehum">除濕機</a><a href="#purifier">清淨機</a><a href="#ac">冷氣</a><a href="#bill">電費</a><a href="#cord">延長線</a><a href="#tables">對照表</a><a href="#firelink">防火站</a></div>
+
+  <div class="card" id="conv">
+    <h2>坪數換算：長寬換算坪數</h2>
+    <label for="len">長（公尺）</label>
+    <input type="number" id="len" step="0.1" min="0.1" max="100" placeholder="例如：4">
+    <label for="wid">寬（公尺）</label>
+    <input type="number" id="wid" step="0.1" min="0.1" max="100" placeholder="例如：3.5">
+    <button class="calc" id="btn0">換算坪數</button>
+    <div class="result" id="r0"></div>
+    <p class="formula">算法：長 × 寬 ÷ 3.3058 ＝ 坪數（1 坪 ＝ 3.3058 平方公尺）。</p>
+  </div>
+
+  <div class="card" id="dehum">
+    <h2>除濕機：需要幾公升？</h2>
+    <label for="p1">空間坪數（實際封閉空間，不要全屋相加）</label>
+    <input type="number" id="p1" step="0.1" min="0.1" max="100" placeholder="例如：8">
+    <div class="quick" data-for="p1"><button type="button" data-val="3">3坪</button><button type="button" data-val="5">5坪</button><button type="button" data-val="8">8坪</button><button type="button" data-val="10">10坪</button><button type="button" data-val="15">15坪</button></div>
+    <div class="check"><input type="checkbox" id="damp"><span>潮濕環境（低樓層、地下室、室內曬衣、靠山區）：用較高標準計算</span></div>
+    <button class="calc" id="btn1">算除濕力</button>
+    <div class="result" id="r1"></div>
+    <p class="formula">算法：標檢局／台電公式，坪數 × 3.3 × 0.24 ＝ 每日基本除濕量（約 0.8 公升／坪）；潮濕環境以 1.2 公升／坪計算。標示除濕力以 27°C、相對濕度 60% 的測試值為準。</p>
+    <div class="product">
+      <h3>除濕機選購</h3>
+      <p>負離子除濕機，賣場標示 30 坪大面積除濕、48 小時約一度電、3 年保固。按上面算出的級距挑，買大不買小，大台的不用一直全速跑，反而比較省電。</p>
+      <p><a href="https://s.shopee.tw/906VqdnTID" target="_blank" rel="noopener sponsored" style="display:inline-block;font-size:17px;font-weight:700;padding:9px 22px;border-radius:999px;background:#E8730C;color:#fff;text-decoration:none">蝦皮購買：負離子除濕機</a></p>
+      <p>伊萊克斯 極適家居500 12L 清淨除濕機（曜岩灰 ED1251DD），賣場標示一級能效、15 坪除濕適用、有效去除 99.99% 常見細菌。</p>
+      <p><a href="https://s.shopee.tw/1Bh8TDPD4" target="_blank" rel="noopener sponsored" style="display:inline-block;font-size:17px;font-weight:700;padding:9px 22px;border-radius:999px;background:#E8730C;color:#fff;text-decoration:none">蝦皮購買：伊萊克斯 12L 清淨除濕機</a></p>
+    </div>
+  </div>
+
+  <div class="card" id="purifier">
+    <h2>空氣清淨機：需要多少 CADR？</h2>
+    <label for="p2">空間坪數</label>
+    <input type="number" id="p2" step="0.1" min="0.1" max="100" placeholder="例如：8">
+    <div class="quick" data-for="p2"><button type="button" data-val="3">3坪</button><button type="button" data-val="5">5坪</button><button type="button" data-val="8">8坪</button><button type="button" data-val="10">10坪</button><button type="button" data-val="15">15坪</button></div>
+    <div class="check"><input type="checkbox" id="allergy"><span>過敏、養寵物或空污較嚴重：用每小時換氣 5 次計算</span></div>
+    <button class="calc" id="btn2">算 CADR</button>
+    <div class="result" id="r2"></div>
+    <p class="formula">算法：所需 CADR（m³/h）＝ 坪數 × 3.3058 × 樓高 2.8 公尺 × 每小時換氣次數（一般 4 次，過敏／寵物 5 次）。廠商標示的適用坪數常偏樂觀，挑高或開放空間要再加大。</p>
+    <div class="product">
+      <h3>空氣清淨機選購</h3>
+      <p>看顆粒物 CADR 值挑，選大於等於上面建議值的機種，濾網耗材成本也要一起看。</p>
+      <p>Hysure 海說 Polo 空氣清淨除濕機，除濕＋清淨二合一，賣場標示雙核除濕、節能省電、靜音低噪、台灣保固。</p>
+      <p><a href="https://s.shopee.tw/8VAFGNlKCW" target="_blank" rel="noopener sponsored" style="display:inline-block;font-size:17px;font-weight:700;padding:9px 22px;border-radius:999px;background:#E8730C;color:#fff;text-decoration:none">蝦皮購買：Hysure Polo 清淨除濕機</a></p>
+      <p>Hysure 海說 Mage 負離子空氣清淨機，賣場標示 CADR 400m³/h、H13 級 HEPA 濾網、30 坪大空間設計、一年保固。</p>
+      <p><a href="https://s.shopee.tw/2gCSJv738G" target="_blank" rel="noopener sponsored" style="display:inline-block;font-size:17px;font-weight:700;padding:9px 22px;border-radius:999px;background:#E8730C;color:#fff;text-decoration:none">蝦皮購買：Hysure Mage 空氣清淨機</a></p>
+    </div>
+  </div>
+
+  <div class="card" id="ac">
+    <h2>冷氣：需要幾 kW？</h2>
+    <label for="p3">空間坪數（實際冷房空間）</label>
+    <input type="number" id="p3" step="0.1" min="0.1" max="100" placeholder="例如：8">
+    <div class="quick" data-for="p3"><button type="button" data-val="3">3坪</button><button type="button" data-val="5">5坪</button><button type="button" data-val="8">8坪</button><button type="button" data-val="10">10坪</button><button type="button" data-val="15">15坪</button></div>
+    <div class="check"><input type="checkbox" id="west"><span>西曬或頂樓：用較高標準計算</span></div>
+    <button class="calc" id="btn3">算冷房能力</button>
+    <div class="result" id="r3"></div>
+    <p class="formula">算法：能源署基準，一般空間每坪 450 kcal/h（約 0.52 kW／坪）；西曬或頂樓每坪 500 kcal/h（約 0.58 kW／坪），1 kW ≈ 860 kcal/h。選購以機身標示的額定冷氣能力為準；挑高、落地窗、開放式空間請業者評估。</p>
+    <div class="product">
+      <h3>冷氣選購</h3>
+      <p>按上面算出的級距挑，變頻加一級能效長期最省電。</p>
+      <button disabled>蝦皮購買（待補）</button>
+    </div>
+  </div>
+
+  <div class="card" id="bill">
+    <h2>電費：這些電器一個月多少錢？</h2>
+    <label for="w1">電器一瓦數（W）</label>
+    <input type="number" id="w1" step="1" min="1" max="100000" placeholder="例如：800">
+    <label for="h1">電器一每天使用幾小時</label>
+    <input type="number" id="h1" step="0.5" min="0.5" max="24" placeholder="例如：8">
+    <label for="w2">電器二瓦數（W，可不填）</label>
+    <input type="number" id="w2" step="1" min="1" max="100000" placeholder="例如：150">
+    <label for="h2">電器二每天使用幾小時</label>
+    <input type="number" id="h2" step="0.5" min="0.5" max="24" placeholder="例如：24">
+    <label for="w3">電器三瓦數（W，可不填）</label>
+    <input type="number" id="w3" step="1" min="1" max="100000" placeholder="例如：60">
+    <label for="h3">電器三每天使用幾小時</label>
+    <input type="number" id="h3" step="0.5" min="0.5" max="24" placeholder="例如：5">
+    <label for="days">每月使用幾天</label>
+    <input type="number" id="days" step="1" min="1" max="31" value="30">
+    <label for="price">每度電價（元，可改）</label>
+    <input type="number" id="price" step="0.01" min="0.1" max="20" value="3.78">
+    <button class="calc" id="btn4">算電費</button>
+    <div class="result" id="r4"></div>
+    <p class="formula">算法：每月度數 ＝ 瓦數 ÷ 1000 × 每天小時 × 每月天數；電費 ＝ 度數 × 每度電價。預設 3.78 元為台電公告住宅平均電價，實際帳單採累進級距（夏月每度 1.78～8.86 元、非夏月 1.78～7.03 元），且為雙月抄表，精算以帳單為準。</p>
+  </div>
+
+  <div class="card" id="cord">
+    <h2>延長線：這些電器能不能同時插？</h2>
+    <label for="rated">延長線額定瓦數（W，可改）</label>
+    <input type="number" id="rated" step="10" min="100" max="5000" value="1650">
+    <label for="c1">電器一瓦數（W）</label>
+    <input type="number" id="c1" step="1" min="1" max="100000" placeholder="例如：1200">
+    <label for="c2">電器二瓦數（W，可不填）</label>
+    <input type="number" id="c2" step="1" min="1" max="100000" placeholder="例如：500">
+    <label for="c3">電器三瓦數（W，可不填）</label>
+    <input type="number" id="c3" step="1" min="1" max="100000" placeholder="例如：800">
+    <label for="c4">電器四瓦數（W，可不填）</label>
+    <input type="number" id="c4" step="1" min="1" max="100000" placeholder="例如：60">
+    <button class="calc" id="btn5">算總瓦數</button>
+    <div class="result" id="r5"></div>
+    <p class="formula">算法：同一條延長線上的電器瓦數加總，不能超過延長線額定瓦數。台灣常見延長線額定 15A，110V × 15A ＝ 1650W，長時間使用建議保留餘裕、不要貼著上限用。例如 1200W＋500W＝1700W，超過 1650W 上限 50W。不要一條接一條串接延長線；電暖器、快煮壺等大功率發熱電器直接插牆壁插座，不要跟其他電器共用延長線。</p>
+    <div class="product">
+      <h3>延長線選購</h3>
+      <p>選有過載保護或防雷保護、額定 15A 的延長線，插座數和長度一次買夠，就不用串接。</p>
+      <p><a href="https://s.shopee.tw/40heRjlJU3" target="_blank" rel="noopener sponsored" style="display:inline-block;font-size:17px;font-weight:700;padding:9px 22px;border-radius:999px;background:#E8730C;color:#fff;text-decoration:none">蝦皮購買：過載保護延長線</a></p>
+      <p><a href="https://s.shopee.tw/8fTU0WiETe" target="_blank" rel="noopener sponsored" style="display:inline-block;font-size:17px;font-weight:700;padding:9px 22px;border-radius:999px;background:#E8730C;color:#fff;text-decoration:none">蝦皮購買：宏晉4+3防雷延長線</a></p>
+    </div>
+  </div>
+
+  <div class="card" id="tables">
+    <h2>坪數對照表（不想算，直接查）</h2>
+    <h3>除濕機</h3>
+    <table><tr><th>空間</th><th>建議除濕力</th></tr><tr><td>4–6 坪</td><td>6 公升／日</td></tr><tr><td>8–10 坪</td><td>8–10 公升／日</td></tr><tr><td>12–15 坪</td><td>12–16 公升／日</td></tr><tr><td>20 坪以上</td><td>18–28 公升／日</td></tr></table>
+    <h3>空氣清淨機（換氣 3～5 次）</h3>
+    <table><tr><th>CADR</th><th>適用坪數</th></tr><tr><td>150 m³/h</td><td>約 3–5 坪</td></tr><tr><td>200 m³/h</td><td>約 4–7 坪</td></tr><tr><td>300 m³/h</td><td>約 6–11 坪</td></tr><tr><td>400 m³/h</td><td>約 9–14 坪</td></tr><tr><td>550 m³/h</td><td>約 12–20 坪</td></tr></table>
+    <h3>冷氣</h3>
+    <table><tr><th>空間</th><th>建議冷房能力</th></tr><tr><td>3–4 坪</td><td>2.2 kW</td></tr><tr><td>4–6 坪</td><td>2.8 kW</td></tr><tr><td>6–8 坪</td><td>3.6–4.0 kW</td></tr><tr><td>8–10 坪</td><td>5.0 kW</td></tr><tr><td>10–12 坪</td><td>6.0–6.3 kW</td></tr><tr><td>12–15 坪</td><td>7.1–8.0 kW</td></tr></table>
+    <p class="formula">對照表為一般環境估算，西曬、頂樓、挑高、開放空間請往上選一級。</p>
+  </div>
+
+  <div class="card" id="firelink">
+    <h2>用電安全，防火知識</h2>
+    <p>延長線超載、老舊電線是居家火災常見原因。算完電器瓦數和電費，也看看家裡的防火功課有沒有做足。</p>
+    <p><a href="https://fire-safety-guide.pages.dev/" target="_blank" rel="noopener" style="display:inline-block;font-size:18px;font-weight:700;padding:10px 26px;border-radius:999px;background:#C0392B;color:#fff;text-decoration:none">前往防火情報站</a></p>
+  </div>
+
+  <div class="card" id="share">
+    <h2>把這個工具分享給需要的人</h2>
+    <p>家裡要買家電、算電費的朋友都用得到。</p>
+    <p><a id="lineshare" target="_blank" rel="noopener" class="sharebtn" href="#">LINE 分享</a> <button id="copylink" class="sharebtn copy" type="button">複製網址</button></p>
+  </div>
+
+  <p class="disclosure">透過本站連結購買，站主會從成交中獲得分潤，不影響你的購買價格。</p>
+
+  <details><summary>除濕機標示的公升數是在什麼條件測的？</summary><p>台灣標示的除濕力是在室溫 27°C、相對濕度 60% 的條件下測的。冬天低溫低濕時，實際除水量會比標示少，選型保留一點餘裕比較安心。</p></details>
+  <details><summary>除濕機是不是買大不買小？</summary><p>是。大台的不用一直全速運轉，反而比小台狂轉省電；小台除濕力不足，開整天也除不乾。</p></details>
+  <details><summary>CADR 是什麼？</summary><p>CADR 是潔淨空氣輸出率，單位 m³/h，代表一小時能輸出多少潔淨空氣。數字越大，清淨速度越快。挑機種先看顆粒物 CADR，再看適用坪數。</p></details>
+  <details><summary>冷氣的「噸」怎麼換算？</summary><p>台灣常說的噸是台制冷凍噸，約 2500 kcal/h（約 2.9 kW）。選購以 kW 為準最不容易錯，1 kW 約等於 860 kcal/h。</p></details>
+  <details><summary>電費累進級距怎麼算？</summary><p>台電住宅用電分六段累進計費，只有超過門檻的度數才套較高費率，不是整期都用最高那段算。夏月每度 1.78～8.86 元，非夏月 1.78～7.03 元，且帳單為雙月抄表，級距度數加倍計算。</p></details>
+  <details><summary>為什麼廠商標示的適用坪數常偏大？</summary><p>廠商標示多以最寬鬆條件估算，換氣次數少、挑高也不計。用換氣 3～5 次反推比較保險，挑高或開放空間要再加大。</p></details>
+  <details><summary>一條延長線最多可以插多少瓦？</summary><p>台灣常見延長線額定 15A，110V × 15A ＝ 1650W，同一條延長線上的電器瓦數加總不能超過這個數字。長時間使用建議保留餘裕、不要貼著上限用，也不要一條接一條串接延長線。</p></details>
+
+  <p class="foot">計算結果僅供選購參考，實際以商品標示與使用環境為準。</p>
+</div>
+<script>
+(function(){
+  var tiers=[6,8,10,12,14,16,20,25,30];
+  function num(id){var v=parseFloat(document.getElementById(id).value);return isNaN(v)?0:v;}
+  function ceil10(x){return Math.ceil(x/10)*10;}
+  document.querySelectorAll('.quick').forEach(function(q){
+    q.addEventListener('click', function(e){
+      if(e.target.tagName==='BUTTON'){ document.getElementById(q.dataset.for).value=e.target.dataset.val; }
+    });
+  });
+  function copyText(txt, btn){
+    function done(){ var old=btn.textContent; btn.textContent='已複製！'; setTimeout(function(){ btn.textContent=old; }, 1500); }
+    function fallback(){
+      var t=document.createElement('textarea'); t.value=txt; t.style.position='fixed'; t.style.opacity='0';
+      document.body.appendChild(t); t.select();
+      try{ document.execCommand('copy'); done(); }catch(e){}
+      document.body.removeChild(t);
+    }
+    if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(txt).then(done).catch(fallback); }
+    else fallback();
+  }
+  function addCopy(r, txt){
+    var b=document.createElement('button');
+    b.className='copybtn'; b.textContent='複製結果';
+    b.addEventListener('click', function(){ copyText(txt, b); });
+    r.appendChild(b);
+  }
+  function fillPing(id, ping){
+    document.getElementById(id).value=ping;
+    document.getElementById({p1:'dehum',p2:'purifier',p3:'ac'}[id]).scrollIntoView();
+  }
+  document.getElementById('btn0').addEventListener('click',function(){
+    var l=num('len'),w=num('wid'),r=document.getElementById('r0');
+    if(!l||l<=0||!w||w<=0){r.innerHTML='請輸入長和寬（公尺），都要大於 0。';r.classList.add('show');return;}
+    var ping=Math.round(l*w/3.3058*10)/10;
+    var txt='長 '+l+' 公尺 × 寬 '+w+' 公尺 ≈ '+ping+' 坪。';
+    r.innerHTML='<div class="big">'+txt+'</div>'
+      +'<div>計算式：'+l+' × '+w+' ÷ 3.3058 ＝ '+ping+'，四捨五入到小數一位。</div>';
+    var b1=document.createElement('button'); b1.className='linkbtn'; b1.textContent='帶入除濕機';
+    b1.addEventListener('click', function(){ fillPing('p1', ping); });
+    var b2=document.createElement('button'); b2.className='linkbtn'; b2.textContent='帶入清淨機';
+    b2.addEventListener('click', function(){ fillPing('p2', ping); });
+    var b3=document.createElement('button'); b3.className='linkbtn'; b3.textContent='帶入冷氣';
+    b3.addEventListener('click', function(){ fillPing('p3', ping); });
+    r.appendChild(b1); r.appendChild(b2); r.appendChild(b3);
+    r.classList.add('show'); addCopy(r, txt);
+  });
+  document.getElementById('btn1').addEventListener('click',function(){
+    var p=num('p1'),r=document.getElementById('r1');
+    if(!p||p<=0||p>100){r.innerHTML='請輸入 0.1～100 之間的坪數。';r.classList.add('show');return;}
+    var per=document.getElementById('damp').checked?1.2:0.8;
+    var need=Math.ceil(p*per);
+    var tier='';for(var i=0;i<tiers.length;i++){if(tiers[i]>=need){tier=tiers[i];break;}}
+    var txt=p+' 坪，建議除濕力至少 '+need+' 公升／日'
+      +(tier?'；建議買 '+tier+'L 級（含）以上。':'；超過 30L，建議分區使用或選商用機型。');
+    r.innerHTML='<div class="big">'+p+' 坪，建議除濕力至少 '+need+' 公升／日</div>'
+      +(tier?'<div>市面常見級距建議買 '+tier+'L 級（含）以上。</div>':'<div>超過 30L，建議分區使用或選商用機型。</div>')
+      +'<div>計算式：'+p+' × '+per+'（公升／坪）＝ '+(p*per).toFixed(1)+'，無條件進位。</div>'
+      +'<div class="next">順便算：<a href="#ac">冷氣</a> · <a href="#bill">電費</a></div>';
+    r.classList.add('show'); addCopy(r, txt);
+  });
+  document.getElementById('btn2').addEventListener('click',function(){
+    var p=num('p2'),r=document.getElementById('r2');
+    if(!p||p<=0||p>100){r.innerHTML='請輸入 0.1～100 之間的坪數。';r.classList.add('show');return;}
+    var low=Math.round(p*3.3058*2.8*3/10)*10, high=ceil10(p*3.3058*2.8*5);
+    var rec=document.getElementById('allergy').checked?high:ceil10(p*3.3058*2.8*4);
+    var txt=p+' 坪，建議 CADR 至少 '+rec+' m³/h（換氣 3～5 次範圍約 '+low+'～'+high+' m³/h）。';
+    r.innerHTML='<div class="big">'+p+' 坪，建議 CADR 至少 '+rec+' m³/h</div>'
+      +'<div>換氣 3～5 次範圍約 '+low+'～'+high+' m³/h。'+(document.getElementById('allergy').checked?'（已用 5 次計算）':'（一般用 4 次計算，過敏／寵物請勾上方選項用 5 次）')+'</div>'
+      +'<div>計算式：'+p+' × 3.3058 × 2.8 公尺 × 換氣次數。</div>'
+      +'<div class="next">順便算：<a href="#ac">冷氣</a> · <a href="#dehum">除濕機</a></div>';
+    r.classList.add('show'); addCopy(r, txt);
+  });
+  var tiersAC=[2.2,2.8,3.6,4.1,5.0,6.3,7.1,8.0];
+  document.getElementById('btn3').addEventListener('click',function(){
+    var p=num('p3'),r=document.getElementById('r3');
+    if(!p||p<=0||p>100){r.innerHTML='請輸入 0.1～100 之間的坪數。';r.classList.add('show');return;}
+    var kcal=document.getElementById('west').checked?500:450;
+    var kw=Math.ceil(p*kcal/860*10)/10;
+    var tier='';for(var i=0;i<tiersAC.length;i++){if(tiersAC[i]>=kw){tier=tiersAC[i];break;}}
+    var txt=p+' 坪，建議冷房能力至少 '+kw.toFixed(1)+' kW'
+      +(tier?'；建議買 '+tier.toFixed(1)+'kW 級（含）以上。':'；超過 8.0kW，建議分區安裝或請業者評估。');
+    r.innerHTML='<div class="big">'+p+' 坪，建議冷房能力至少 '+kw.toFixed(1)+' kW</div>'
+      +(tier?'<div>市面常見級距建議買 '+tier.toFixed(1)+'kW 級（含）以上。</div>':'<div>超過 8.0kW，建議分區安裝或請業者評估。</div>')
+      +'<div>計算式：'+p+' × '+kcal+' kcal/h ÷ 860，無條件進位到小數一位。</div>'
+      +'<div class="next">順便算：<a href="#bill">電費</a> · <a href="#dehum">除濕機</a></div>';
+    var lb=document.createElement('button'); lb.className='linkbtn'; lb.textContent='用這台冷氣算電費';
+    lb.addEventListener('click', function(){
+      document.getElementById('w1').value=Math.round(kw*1000/6.0);
+      document.getElementById('bill').scrollIntoView();
+    });
+    r.appendChild(lb);
+    var note=document.createElement('div'); note.className='formula'; note.textContent='耗電功率以 CSPF 6.0 估算（冷房能力 ÷ 6.0），實際以機身標示的耗電功率為準。';
+    r.appendChild(note);
+    r.classList.add('show'); addCopy(r, txt);
+  });
+  document.getElementById('btn4').addEventListener('click',function(){
+    var d=num('days'),pr=num('price'),r=document.getElementById('r4');
+    var items=[];
+    [['一','w1','h1'],['二','w2','h2'],['三','w3','h3']].forEach(function(it){
+      var w=num(it[1]), h=num(it[2]);
+      if(w>0 && h>0 && h<=24){ items.push({name:it[0], w:w, h:h, kwh:w/1000*h*d}); }
+    });
+    if(!items.length || !d || d<=0 || d>31 || !pr || pr<=0){r.innerHTML='請至少填一台電器的瓦數和每天小時（0.5～24），以及每月天數（1～31）、每度電價。';r.classList.add('show');return;}
+    var total=0; items.forEach(function(it){ total+=it.kwh; });
+    var fee=total*pr;
+    var lines=items.map(function(it){ return '電器'+it.name+'：'+it.w+'W × '+it.h+' 小時 × '+d+' 天 ＝ '+it.kwh.toFixed(1)+' 度。'; }).join('<br>');
+    var txt='每月共約 '+total.toFixed(1)+' 度，電費約 '+fee.toFixed(0)+' 元；一年約 '+(total*12).toFixed(0)+' 度、電費約 '+(fee*12).toFixed(0)+' 元。';
+    r.innerHTML='<div class="big">每月共約 '+total.toFixed(1)+' 度，電費約 '+fee.toFixed(0)+' 元</div>'
+      +'<div>'+lines+'</div>'
+      +'<div>一年約 '+(total*12).toFixed(0)+' 度、電費約 '+(fee*12).toFixed(0)+' 元。</div>'
+      +'<div>計算式：度數 × '+pr+' 元。</div>'
+      +'<div class="next">順便算：<a href="#ac">冷氣</a> · <a href="#dehum">除濕機</a></div>';
+    r.classList.add('show'); addCopy(r, txt);
+  });
+  document.getElementById('lineshare').href='https://social-plugins.line.me/lineit/share?url='+encodeURIComponent(window.location.href);
+  document.getElementById('copylink').addEventListener('click', function(){ copyText(window.location.href, this); });
+  document.getElementById('btn5').addEventListener('click',function(){
+    var rated=num('rated'),r=document.getElementById('r5');
+    var items=[];
+    [['一','c1'],['二','c2'],['三','c3'],['四','c4']].forEach(function(it){
+      var w=num(it[1]);
+      if(w>0){ items.push({name:it[0], w:w}); }
+    });
+    if(!items.length || !rated || rated<=0){r.innerHTML='請先填延長線額定瓦數，並至少填一台電器的瓦數。';r.classList.add('show');return;}
+    var total=0; items.forEach(function(it){ total+=it.w; });
+    var safe=Math.round(rated*0.8);
+    var verdict;
+    if(total<=safe){ verdict='在安全範圍'; }
+    else if(total<=rated){ verdict='接近上限，長時間使用建議分開插'; }
+    else { verdict='已超載，不要同時開（超過 '+(total-rated)+'W）'; }
+    var lines=items.map(function(it){ return '電器'+it.name+'：'+it.w+'W。'; }).join('<br>');
+    var txt='總共 '+total+'W，延長線額定 '+rated+'W：'+verdict;
+    r.innerHTML='<div class="big">總共 '+total+'W：'+verdict+'</div>'
+      +'<div>'+lines+'</div>'
+      +'<div>額定 '+rated+'W，建議保留餘裕、長時間使用以 '+safe+'W 以下為宜。</div>'
+      +'<div class="next">順便算：<a href="#bill">電費</a> · <a href="#firelink">防火站</a></div>';
+    r.classList.add('show'); addCopy(r, txt);
+  });
+})();
+</script>
+<img src="https://site-stats.terryboy122.workers.dev/t?site=ping-calculator" style="display:none" alt="">
+</body>
+</html>
